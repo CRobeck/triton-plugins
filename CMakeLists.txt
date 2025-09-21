@@ -88,10 +88,10 @@ endfunction()
 
 include_directories(${MLIR_INCLUDE_DIRS})
 include_directories(${LLVM_INCLUDE_DIRS})
-include_directories(SYSTEM "/Users/corbin/Desktop/triton/include")
-include_directories(SYSTEM "/Users/corbin/Desktop/triton/third_party/")
-include_directories(SYSTEM "/Users/corbin/Desktop/triton/build/cmake.macosx-15.4-arm64-cpython-3.13/include")
-include_directories(SYSTEM "/Users/corbin/Desktop/triton/build/cmake.macosx-15.4-arm64-cpython-3.13/third_party")
+include_directories(SYSTEM "${TRITON_BASE_DIR}/include")
+include_directories(SYSTEM "${TRITON_BASE_DIR}/third_party")
+include_directories(SYSTEM "${TRITON_INSTALL_DIR}/include")
+include_directories(SYSTEM "${TRITON_INSTALL_DIR}/third_party")
 include_directories(SYSTEM "${PROJECT_BINARY_DIR}/lib") # Tablegen'd files
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "")

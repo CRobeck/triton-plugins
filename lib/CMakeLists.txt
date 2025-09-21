@@ -46,23 +46,11 @@ foreach( plugin ${GPU_EXTENSION_PASSES} )
         LLVMSupport
         MLIRSupport
         "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>"
-        /Users/corbin/Desktop/triton/python/triton/_C/libtriton.so
+        ${TRITON_LIB_DIR}/libtriton.so
         )
     set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY
                           ${PROJECT_BINARY_DIR}/lib)
-#   target_link_libraries(${plugin} PRIVATE
-#       /Users/corbin/Desktop/triton/python/triton/_C/libtriton.so
-#       ${triton_libs}
-#       # MLIR core
-#       MLIRIR
-#       MLIRReduceLib
-#       MLIRPass
-#       MLIRRegisterAllDialects
-#       MLIRRegisterAllPasses
-#       MLIRTransforms
-#       LLVMSupport
-#       MLIRSupport 
-#   )
+
                       
     # This is set to -fvisibility=hidden in the top level CMake file
     # which causes the llvmGetPassPluginInfo symbol to be hidden and

@@ -5,6 +5,6 @@ include "mlir/Pass/PassBase.td"
 
 def TritonGPUHelloExtension : Pass<"tritongpu-HelloExtension", "mlir::ModuleOp"> {
   let summary = "Hello World Extension";
-  let dependentDialects = ["mlir::triton::gpu::TritonGPUDialect"];
+//  let dependentDialects = ["mlir::triton::gpu::TritonGPUDialect"];
 }
 #endif

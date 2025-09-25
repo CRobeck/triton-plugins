@@ -52,21 +52,26 @@ namespace gpu {
 #define GEN_PASS_DEF_TRITONGPUHELLOEXTENSION
 #include "Passes.h.inc"
 
-namespace {
-struct HelloExtension : public OpRewritePattern<DotOp> {
-  using OpRewritePattern::OpRewritePattern;
-  LogicalResult matchAndRewrite(DotOp dotOp,
-                                PatternRewriter &rewriter) const override {
-    return success();
-  }
-};
-} // anonymous namespace
+// namespace {
+// struct HelloExtension : public OpRewritePattern<DotOp> {
+//   using OpRewritePattern::OpRewritePattern;
+//   LogicalResult matchAndRewrite(DotOp dotOp,
+//                                 PatternRewriter &rewriter) const override {
+//     return success();
+//   }
+// };
+// } // anonymous namespace
 
 struct HelloExtensionPass :
   public impl::TritonGPUHelloExtensionBase<HelloExtensionPass> {
   void runOnOperation() override {
+    llvm::errs() << "HelloExtensionPass\n";
+
     // MLIRContext *context = &getContext();
     // ModuleOp m = getOperation();
+    // OpPassManager pm;
+    // if (failed(runPipeline(pm, m)))
+    //   return signalPassFailure();
     // RewritePatternSet decomposePatterns(context);
     // decomposePatterns.add<HelloExtension>(context);
     // if (applyPatternsGreedily(m, std::move(decomposePatterns)).failed()) {
@@ -75,21 +80,38 @@ struct HelloExtensionPass :
   }
 };
 
+
+
+extern "C" LLVM_ATTRIBUTE_WEAK void addTritonPluginPass(mlir::PassManager* pm) {
+  llvm::errs() << "addTritonPluginPass\n";
+  pm->addPass(createTritonGPUHelloExtension());
+}
+
+extern "C" LLVM_ATTRIBUTE_WEAK
+void registerTritonGPUHelloExtension() {
+  llvm::errs() << "registerTritonGPUHelloExtension\n";
+  ::mlir::registerPass([]() -> std::unique_ptr<::mlir::Pass> {
+    return createTritonGPUHelloExtension();
+  });
+}
 } // namespace gpu
 } // namespace triton
 } // namespace mlir
 
 
-void registerPasses() {
-  ::mlir::registerPass([]() -> std::unique_ptr<::mlir::Pass> {
-    return mlir::triton::gpu::createTritonGPUHelloExtension();
-  });
-}
+// void registerPasses() {
+//   llvm::errs() << "registerPasses\n";
+//   ::mlir::registerPass([]() -> std::unique_ptr<::mlir::Pass> {
+//     return mlir::triton::gpu::createTritonGPUHelloExtension();
+//   });
+// }
 
 
-/// Pass plugin registration mechanism.
-/// Necessary symbol to register the pass plugin.
-extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo mlirGetPassPluginInfo() {
-  return {MLIR_PLUGIN_API_VERSION, "HelloExtensionPlugin", LLVM_VERSION_STRING,
-          []() { registerPasses(); }};
-}
+// /// Pass plugin registration mechanism.
+// /// Necessary symbol to register the pass plugin.
+// extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo mlirGetPassPluginInfo() {
+//   llvm::errs() << "mlirGetPassPluginInfo\n";
+//   return {MLIR_PLUGIN_API_VERSION, "HelloExtensionPlugin", LLVM_VERSION_STRING,
+//           []() {registerPasses();
+//           }};
+// }

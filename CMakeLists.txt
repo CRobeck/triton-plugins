@@ -112,9 +112,9 @@ endif()
 #   -DLLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING \
 #   -fdiagnostics-color=always")
 
-if(NOT LLVM_ENABLE_RTTI)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
-endif()
+#if(NOT LLVM_ENABLE_RTTI)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -frtti")
+#endif()
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-fvisibility-inlines-hidden" SUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG)
@@ -127,6 +127,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Set the build directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set(CMAKE_BUILD_TYPE "Debug")
 
 add_subdirectory(lib)
 add_subdirectory(${TRITON_BASE_DIR}/include TRITON_INCLUDES)

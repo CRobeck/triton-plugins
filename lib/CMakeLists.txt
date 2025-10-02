@@ -52,6 +52,7 @@ foreach( plugin ${GPU_EXTENSION_PASSES} )
         MLIRSupport
         TritonGPUIR
         TritonNvidiaGPUIR
+        TritonInstrumentIR
         "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>"
         ${TRITON_LIB_DIR}/libtriton.so
         )

@@ -17,11 +17,10 @@ namespace plugin {
 struct HelloExtensionPass :
   public impl::TritonGPUHelloExtensionBase<HelloExtensionPass> {
   void runOnOperation() override {
-    llvm::errs() << "HelloExtensionPass\n";
+    llvm::errs() << "Hello From Triton Plugin Pass: HelloExtensionPass\n";
 
     MLIRContext *context = &getContext();
     ModuleOp mod = getOperation();
-    llvm::errs() << *mod << "\n";
   }
 };
 
@@ -30,6 +29,5 @@ struct HelloExtensionPass :
 } // namespace mlir
 
 extern "C" void addTritonPluginPass(mlir::PassManager* pm, mlir::ModuleOp *mod) {
-  llvm::errs() << "addTritonPluginPass\n";
   pm->addPass(mlir::triton::plugin::createTritonGPUHelloExtension());
 }

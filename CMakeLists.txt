@@ -45,6 +45,17 @@ message("LLVM STATUS:
   Targets     ${LLVM_TARGETS_TO_BUILD}"
 )
 
+# Python Interpreter is used to run lit tests
+  find_package(Python3 REQUIRED COMPONENTS Development.Module Interpreter)
+  find_package(pybind11 CONFIG REQUIRED HINTS "${Python3_SITELIB}")
+if(Python_FOUND)
+    message(STATUS "Python Found: ${Python_EXECUTABLE}")
+    message(STATUS "Python Found: ${Python_INCLUDE_DIRS}")
+    message(STATUS "Python Found: ${Python_LIBRARIES}")
+    message(STATUS "Python Found: ${Python_LIBRARY_DIRS}")
+    include_directories(${Python_INCLUDE_DIRS})
+endif()
+
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
 link_directories(${LLVM_LIBRARY_DIRS})
 add_definitions(${LLVM_DEFINITIONS})

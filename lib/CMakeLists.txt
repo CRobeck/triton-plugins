@@ -2,6 +2,10 @@ set(LLVM_TARGET_DEFINITIONS Passes.td)
 mlir_tablegen(Passes.h.inc -gen-pass-decls -name Extensions)
 add_public_tablegen_target(TritonGPUExtensionIncGen)
 
+llvm_canonicalize_cmake_booleans(
+  MLIR_ENABLE_BINDINGS_PYTHON
+)
+
 set(GPU_EXTENSION_PASSES
     GPUExtensionTestLib
     )
@@ -39,14 +43,22 @@ foreach( plugin ${GPU_EXTENSION_PASSES} )
         TritonGPUIR
         TritonNvidiaGPUIR
         TritonInstrumentIR
+        MLIROptLib
+        MLIRPass
+        MLIRRegisterAllDialects
+        MLIRRegisterAllPasses
+        MLIRTransforms
+        Python3::Module
+        pybind11::headers
         "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>"
-        ${TRITON_LIB_DIR}/libtriton.so
+        # ${TRITON_LIB_DIR}/libtriton.so
         )
     set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY
                           ${PROJECT_BINARY_DIR}/lib)
+    target_link_options(${plugin} PRIVATE -rdynamic)
 
-    if(NOT MSVC)
-      target_compile_options(${plugin} PRIVATE -fvisibility=default)
-    endif()
+      target_compile_options(${plugin} PRIVATE -fvisibility=default -fPIC)
+      target_compile_definitions(${plugin} PUBLIC _GLIBCXX_USE_CXX11_ABI=1)
+    target_link_libraries(${plugin} ${Python_LIBRARIES})
+    target_link_options(${plugin} PRIVATE ${PYTHON_LDFLAGS} -Wl,--no-as-needed)
 endforeach()
-
